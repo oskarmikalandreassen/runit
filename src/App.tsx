@@ -1,135 +1,27 @@
-import React, { useState } from "react";
-import data from "./data.json";
-import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-
-import DateSelector from "./components/DateSelector";
-import PlotModule from "./components/PlotModule";
+import React from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import RadioGroup from "./components/RadioGroup";
-
-import { ActivityData } from "./types";
+import Resources from "./components/Resources";
+import Dashboard from "./components/Dashboard";
 import "./app.css";
+import data from "./data.json";
+import Predictor from "./components/Predictor";
+import Analysis from "./components/Analysis";
 
 function App() {
-  const [selectedDates, setSelectedDates] = useState<{
-    startDate: dayjs.Dayjs | null;
-    endDate: dayjs.Dayjs | null;
-  }>({
-    startDate: null,
-    endDate: null,
-  });
-
-  const handleStartDateChange = (startDate: dayjs.Dayjs | null) => {
-    setSelectedDates((prevDates) => ({
-      ...prevDates,
-      startDate: startDate ? dayjs(startDate) : null,
-    }));
-  };
-
-  const handleEndDateChange = (endDate: dayjs.Dayjs | null) => {
-    setSelectedDates((prevDates) => ({
-      ...prevDates,
-      endDate: endDate ? dayjs(endDate) : null,
-    }));
-  };
-
-  const [activityType, setActivityType] = useState<"Run" | "Swim">("Run");
-
-  const handleActivityTypeChange = (
-    event: React.ChangeEvent<{ value: "Run" | "Swim" }>
-  ) => {
-    setActivityType(event.target.value as "Run" | "Swim");
-  };
-
-  const [timePeriod, setTimePeriod] = useState<"day" | "week" | "month">(
-    "week"
-  );
-
-  const handleTimePeriodChange = (
-    event: React.ChangeEvent<{ value: "day" | "week" | "month" }>
-  ) => {
-    setTimePeriod(event.target.value as "day" | "week" | "month");
-  };
-
-  const [selectedMetric, setSelectedMetric] = useState<string>("Distance");
-  const handleMetricChange = (metric: string) => {
-    setSelectedMetric(metric);
-  };
-  const distanceTimeElevMetrics = [
-    "Distance",
-    "Moving Time",
-    "Elevation Gain",
-    "Calories",
-    "Average Cadence",
-    "Average Speed",
-    "Max Heart Rate",
-  ];
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <NavBar />
-
-      <div className="container">
-        <div className="form-container">
-          <div className="row">
-            <div className="col">
-              <DateSelector
-                label="Start Date"
-                selectedDate={selectedDates.startDate}
-                onDateChange={handleStartDateChange}
-              />
-            </div>
-            <div className="col">
-              <DateSelector
-                label="End Date"
-                selectedDate={selectedDates.endDate}
-                onDateChange={handleEndDateChange}
-              />
-            </div>
-            <div className="col">
-              <Select
-                value={activityType}
-                onChange={handleActivityTypeChange}
-                label="Activity Type"
-              >
-                <MenuItem value="Run">Run</MenuItem>
-                <MenuItem value="Swim">Swim</MenuItem>
-              </Select>
-            </div>
-            <div className="col">
-              <Select
-                value={timePeriod}
-                onChange={handleTimePeriodChange}
-                label="Time Period"
-              >
-                <MenuItem value="day">Day</MenuItem>
-                <MenuItem value="week">Week</MenuItem>
-                <MenuItem value="month">Month</MenuItem>
-              </Select>
-            </div>
-          </div>
-          <PlotModule
-            startDate={selectedDates.startDate}
-            endDate={selectedDates.endDate}
-            data={data as ActivityData[]}
-            activityTypeFilter={activityType}
-            timeFilter={timePeriod}
-            selectedMetric={selectedMetric}
-          />
-          <div className="radio-group-container text-center">
-            <RadioGroup
-              options={distanceTimeElevMetrics}
-              selectedOption={selectedMetric}
-              onOptionChange={handleMetricChange}
-            />
-          </div>
-        </div>
+    <BrowserRouter>
+      <div>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />{" "}
+          <Route path="/dashboard" element={<Dashboard data={data} />} />
+          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/predictor" element={<Predictor />} />
+          <Route path="/resources" element={<Resources />} />
+        </Routes>
       </div>
-    </LocalizationProvider>
+    </BrowserRouter>
   );
 }
 
