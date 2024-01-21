@@ -3,9 +3,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 function Resources() {
   console.log("HEkko");
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}></LocalizationProvider>
-  );
+  return <></>;
 }
 
 export default Resources;
