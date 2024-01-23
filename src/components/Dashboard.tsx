@@ -7,6 +7,7 @@ import PlotModule from "./PlotModule";
 import RadioGroup from "./RadioGroup";
 import StatsOverview from "./StatsOverview";
 import DateSelector from "./DateSelector";
+import PieChart from "./PieActiveChart";
 
 import {
   filterDataByDateAndType,
@@ -23,6 +24,8 @@ interface Props {
 }
 
 function Dashboard({ data }: Props) {
+  // DATE SELECTORS
+
   const [selectedDates, setSelectedDates] = useState<{
     startDate: dayjs.Dayjs | null;
     endDate: dayjs.Dayjs | null;
@@ -45,8 +48,9 @@ function Dashboard({ data }: Props) {
     }));
   };
 
-  const [activityType, setActivityType] = useState<"Run" | "Swim">("Run");
+  // SELECTORS
 
+  const [activityType, setActivityType] = useState<"Run" | "Swim">("Run");
   const handleActivityTypeChange = (
     event: React.ChangeEvent<{ value: "Run" | "Swim" }>
   ) => {
@@ -56,12 +60,31 @@ function Dashboard({ data }: Props) {
   const [timePeriod, setTimePeriod] = useState<"Day" | "Week" | "Month">(
     "Week"
   );
-
   const handleTimePeriodChange = (
     event: React.ChangeEvent<{ value: "Day" | "Week" | "Month" }>
   ) => {
     setTimePeriod(event.target.value as "Day" | "Week" | "Month");
   };
+
+  const [weekPieType, setWeekPieType] = useState<
+    "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities"
+  >("Distance");
+  const handleWeekPieTypeChange = (
+    event: React.ChangeEvent<{
+      value: "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities";
+    }>
+  ) => {
+    setWeekPieType(
+      event.target.value as
+        | "Distance"
+        | "Time"
+        | "Calories"
+        | "Elevation Gain"
+        | "Activities"
+    );
+  };
+
+  // RADIO GROUP
 
   const [selectedMetric, setSelectedMetric] = useState<string>("Distance");
   const handleMetricChange = (metric: string) => {
@@ -77,6 +100,8 @@ function Dashboard({ data }: Props) {
     "Average Speed",
     "Max Heart Rate",
   ];
+
+  // FILTERING AND AGGREGATING DATA
 
   const filteredData = filterDataByDateAndType(
     data,
@@ -164,6 +189,17 @@ function Dashboard({ data }: Props) {
                 statsDict={distanceMetrics}
               />
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container">
+        <div className="form-container">
+          <div className="row">
+            <div className="col">
+              <PieChart title="Week Breakdown" filteredData={filteredData} />
+            </div>
+            <div className="col"></div>
           </div>
         </div>
       </div>
