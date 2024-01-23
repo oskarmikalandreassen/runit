@@ -5,7 +5,15 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import PlotModule from "./PlotModule";
 import RadioGroup from "./RadioGroup";
+import StatsOverview from "./StatsOverview";
 import DateSelector from "./DateSelector";
+
+import {
+  filterDataByDateAndType,
+  aggregateDataByTimeFilter,
+  calculateMetrics,
+} from "../utils/helpers";
+
 import { ActivityData } from "./types";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -45,14 +53,14 @@ function Dashboard({ data }: Props) {
     setActivityType(event.target.value as "Run" | "Swim");
   };
 
-  const [timePeriod, setTimePeriod] = useState<"day" | "week" | "month">(
-    "week"
+  const [timePeriod, setTimePeriod] = useState<"Day" | "Week" | "Month">(
+    "Week"
   );
 
   const handleTimePeriodChange = (
-    event: React.ChangeEvent<{ value: "day" | "week" | "month" }>
+    event: React.ChangeEvent<{ value: "Day" | "Week" | "Month" }>
   ) => {
-    setTimePeriod(event.target.value as "day" | "week" | "month");
+    setTimePeriod(event.target.value as "Day" | "Week" | "Month");
   };
 
   const [selectedMetric, setSelectedMetric] = useState<string>("Distance");
@@ -68,6 +76,24 @@ function Dashboard({ data }: Props) {
     "Average Speed",
     "Max Heart Rate",
   ];
+
+  const filteredData = filterDataByDateAndType(
+    data,
+    selectedDates.startDate,
+    selectedDates.endDate,
+    activityType
+  );
+
+  const aggregatedData = aggregateDataByTimeFilter(
+    filteredData,
+    timePeriod,
+    selectedMetric
+  );
+
+  const metrics = calculateMetrics(filteredData, timePeriod);
+  const overallPerformance = metrics.overallPerformance;
+  const distanceMetrics = metrics.distanceMetrics;
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="container">
@@ -103,26 +129,40 @@ function Dashboard({ data }: Props) {
                 onChange={handleTimePeriodChange}
                 label="Time Period"
               >
-                <MenuItem value="day">Day</MenuItem>
-                <MenuItem value="week">Week</MenuItem>
-                <MenuItem value="month">Month</MenuItem>
+                <MenuItem value="Day">Day</MenuItem>
+                <MenuItem value="Week">Week</MenuItem>
+                <MenuItem value="Month">Month</MenuItem>
               </Select>
             </div>
           </div>
-          <PlotModule
-            startDate={selectedDates.startDate}
-            endDate={selectedDates.endDate}
-            data={data as ActivityData[]}
-            activityTypeFilter={activityType}
-            timeFilter={timePeriod}
-            selectedMetric={selectedMetric}
-          />
+          <PlotModule data={aggregatedData} />
           <div className="radio-group-container text-center">
             <RadioGroup
               options={distanceTimeElevMetrics}
               selectedOption={selectedMetric}
               onOptionChange={handleMetricChange}
             />
+          </div>
+        </div>
+      </div>
+      <div className="container">
+        <div className="form-container">
+          <div className="row">
+            <div className="col">
+              <StatsOverview
+                overviewTitle={
+                  (timePeriod === "Day" ? "Daily" : timePeriod + "ly") +
+                  " Performance"
+                }
+                statsDict={overallPerformance}
+              />
+            </div>
+            <div className="col">
+              <StatsOverview
+                overviewTitle={"Estimated Best Efforts"}
+                statsDict={distanceMetrics}
+              />
+            </div>
           </div>
         </div>
       </div>
