@@ -15,9 +15,10 @@
     width: 1000px; 
   }
 
-  .stats-overview {
-    width: calc(50% - 50px); /* Set the width of each StatsOverview component to less than half, considering margin */
-    margin-right: 10px; /* Add margin between the StatsOverview components */
+
+  .pie-chart {
+    margin-bottom: 10px;
+    margin-top: 20px;
   }
   
   .row {
