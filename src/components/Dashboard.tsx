@@ -67,6 +67,7 @@ function Dashboard({ data }: Props) {
   const handleMetricChange = (metric: string) => {
     setSelectedMetric(metric);
   };
+
   const distanceTimeElevMetrics = [
     "Distance",
     "Moving Time",
