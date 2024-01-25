@@ -75,38 +75,38 @@ function PieActiveChart({ title, filteredData }: Props) {
     }
   });
 
-  // Convert aggregated data to the format required by the PieChart
-  const data = Object.entries(aggregatedData).map(([label, value], id) => ({
+  const orderedDaysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const data = orderedDaysOfWeek.map((dayOfWeek, id) => ({
     id,
     value:
       displayMode === "Percentage"
         ? Math.round(
-            (value /
+            (aggregatedData[dayOfWeek] /
               Object.values(aggregatedData).reduce((sum, v) => sum + v, 0)) *
               100
           )
-        : value.toFixed(2),
-    label,
+        : aggregatedData[dayOfWeek].toFixed(2),
+    label: dayOfWeek,
   }));
-
-  // Customize tooltip content with the "%" symbol
-  const tooltipContent = ({
-    category,
-    value,
-  }: {
-    category: string;
-    value: number;
-  }) => `${category}: ${value}${displayMode === "Percentage" ? "%" : ""}`;
 
   return (
     <div>
-      <div className="row">
+      <div className="row" style={{ marginBottom: "20px" }}>
         <div className="col">
           <h5>{title}</h5>
         </div>
       </div>
       <div className="row">
-        <div className="col-3">
+        <div className="col-3" style={{ display: "flex", gap: "10px" }}>
           <Select
             value={weekPieType}
             onChange={handleWeekPieTypeChange}
@@ -118,8 +118,6 @@ function PieActiveChart({ title, filteredData }: Props) {
             <MenuItem value="Elevation Gain">Elevation Gain</MenuItem>
             <MenuItem value="Activities">Activities</MenuItem>
           </Select>
-        </div>
-        <div className="col">
           <Select
             value={displayMode}
             label="Display Mode"
@@ -145,9 +143,6 @@ function PieActiveChart({ title, filteredData }: Props) {
                     innerRadius: 30,
                     additionalRadius: -10,
                     color: "gray",
-                  },
-                  tooltip: {
-                    formatter: tooltipContent,
                   },
                 },
               ]}

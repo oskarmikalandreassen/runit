@@ -26,27 +26,6 @@ interface Props {
 function Dashboard({ data }: Props) {
   // DATE SELECTORS
 
-  // Find the first and last dates in the data
-  /* const initialDates = data.reduce(
-    (acc, curr) => {
-      const currentDate = dayjs(curr.DateTime, { format: "YYYY-MM-DD" });
-
-      if (!acc.startDate || currentDate.isBefore(acc.startDate)) {
-        acc.startDate = currentDate;
-      }
-
-      if (!acc.endDate || currentDate.isAfter(acc.endDate)) {
-        acc.endDate = currentDate;
-      }
-
-      return acc;
-    },
-    {
-      startDate: null as dayjs.Dayjs | null,
-      endDate: null as dayjs.Dayjs | null,
-    }
-  ); */
-
   const [selectedDates, setSelectedDates] = useState<{
     startDate: dayjs.Dayjs | null;
     endDate: dayjs.Dayjs | null;
@@ -87,27 +66,9 @@ function Dashboard({ data }: Props) {
     setTimePeriod(event.target.value as "Day" | "Week" | "Month");
   };
 
-  const [weekPieType, setWeekPieType] = useState<
-    "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities"
-  >("Distance");
-  const handleWeekPieTypeChange = (
-    event: React.ChangeEvent<{
-      value: "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities";
-    }>
-  ) => {
-    setWeekPieType(
-      event.target.value as
-        | "Distance"
-        | "Time"
-        | "Calories"
-        | "Elevation Gain"
-        | "Activities"
-    );
-  };
-
   // RADIO GROUP
 
-  const [selectedMetric, setSelectedMetric] = useState<string>("Distance");
+  const [selectedMetric, setSelectedMetric] = useState<any>("Distance");
   const handleMetricChange = (metric: string) => {
     setSelectedMetric(metric);
   };
@@ -162,21 +123,22 @@ function Dashboard({ data }: Props) {
       <div className={`sticky-container ${isSticky ? "sticky" : ""}`}>
         <div className="form-container">
           <div className="row">
-            <div className="col">
+            <div className="col-4" style={{ display: "flex", gap: "10px" }}>
               <DateSelector
                 label="Start Date"
                 selectedDate={selectedDates.startDate}
                 onDateChange={handleStartDateChange}
               />
-            </div>
-            <div className="col">
               <DateSelector
                 label="End Date"
                 selectedDate={selectedDates.endDate}
                 onDateChange={handleEndDateChange}
               />
             </div>
-            <div className="col">
+
+            <div className="col-5"></div>
+
+            <div className="col" style={{ display: "flex", gap: "10px" }}>
               <Select
                 value={activityType}
                 onChange={handleActivityTypeChange}
@@ -185,8 +147,6 @@ function Dashboard({ data }: Props) {
                 <MenuItem value="Run">Run</MenuItem>
                 <MenuItem value="Swim">Swim</MenuItem>
               </Select>
-            </div>
-            <div className="col">
               <Select
                 value={timePeriod}
                 onChange={handleTimePeriodChange}
@@ -204,12 +164,10 @@ function Dashboard({ data }: Props) {
       <div className="container">
         <div className="form-container">
           <div className="row">
-            <div className="col-3">
+            <div className="col-6" style={{ display: "flex", gap: "10px" }}>
               <h5>{"Activities Overview"}</h5>
-            </div>
-            <div className="col-5" style={{ color: "lightgray" }}>
               {selectedDates.startDate && selectedDates.endDate && (
-                <h5>
+                <h5 style={{ color: "lightgray" }}>
                   {String(selectedDates.startDate.format("DD/MM/YYYY")) +
                     " - " +
                     String(selectedDates.endDate.format("DD/MM/YYYY"))}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface RadioGroupProps {
   options: string[];
@@ -18,17 +18,18 @@ function RadioGroup({
           <input
             type="radio"
             className="btn-check"
-            name="btnradio"
-            id={`btnradio${index + 1}`}
+            name="options"
+            style={{ color: "#02d5d1" }}
+            id={`option${index + 1}`}
             autoComplete="off"
             checked={selectedOption === option}
             onChange={() => onOptionChange(option)}
           />
           <label
-            className={`btn btn-outline-primary ${
+            className={`btn btn-secondary ${
               selectedOption === option ? "active" : ""
             }`}
-            htmlFor={`btnradio${index + 1}`}
+            htmlFor={`option${index + 1}`}
           >
             {option}
           </label>

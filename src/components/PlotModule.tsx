@@ -6,7 +6,7 @@ interface Props {
 }
 
 function PlotModule({ data }: Props) {
-  const filteredDataForChart = Object.keys(data).map((entry) => ({
+  const filteredDataForChart = Object.keys(data).map((entry: any) => ({
     x: entry,
     y: data[entry],
   }));
@@ -17,7 +17,7 @@ function PlotModule({ data }: Props) {
       height={400}
       series={[
         {
-          data: filteredDataForChart.map((entry) => entry.y),
+          data: filteredDataForChart.map((entry: any) => entry.y),
           area: true,
         },
       ]}
