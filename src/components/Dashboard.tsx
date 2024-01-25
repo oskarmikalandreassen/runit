@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 import Select from "@mui/material/Select";
@@ -120,9 +120,25 @@ function Dashboard({ data }: Props) {
   const overallPerformance = metrics.overallPerformance;
   const distanceMetrics = metrics.distanceMetrics;
 
+  // SCROLLING
+  const [isSticky, setIsSticky] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsSticky(scrollY > 30); // Change the threshold as needed
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="container">
+      <div className={`sticky-container ${isSticky ? "sticky" : ""}`}>
         <div className="form-container">
           <div className="row">
             <div className="col">
@@ -161,6 +177,11 @@ function Dashboard({ data }: Props) {
               </Select>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="container">
+        <div className="form-container">
           <PlotModule data={aggregatedData} />
           <div className="radio-group-container text-center">
             <RadioGroup

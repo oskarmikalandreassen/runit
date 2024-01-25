@@ -12,9 +12,36 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 1000px; 
+    width: 1000px;
+    transition: box-shadow 0.3s ease-in-out, width 0.3s ease-in-out;
   }
 
+  .sticky-container {
+    position: sticky;
+    top: 30px;
+    background-color: #fff;
+    z-index: 1000;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    width: 1000px;
+    margin-left: auto; 
+    margin-right: auto; 
+    transition: box-shadow 0.3s ease-in-out, width 0.3s ease-in-out;
+
+  }
+  
+  .sticky-container.sticky {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    width: 1200px;
+
+  }
+
+  .sticky-container.sticky .form-container {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    width: 1200px;
+  }
 
   .pie-chart {
     margin-bottom: 10px;
