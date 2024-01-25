@@ -26,6 +26,27 @@ interface Props {
 function Dashboard({ data }: Props) {
   // DATE SELECTORS
 
+  // Find the first and last dates in the data
+  /* const initialDates = data.reduce(
+    (acc, curr) => {
+      const currentDate = dayjs(curr.DateTime, { format: "YYYY-MM-DD" });
+
+      if (!acc.startDate || currentDate.isBefore(acc.startDate)) {
+        acc.startDate = currentDate;
+      }
+
+      if (!acc.endDate || currentDate.isAfter(acc.endDate)) {
+        acc.endDate = currentDate;
+      }
+
+      return acc;
+    },
+    {
+      startDate: null as dayjs.Dayjs | null,
+      endDate: null as dayjs.Dayjs | null,
+    }
+  ); */
+
   const [selectedDates, setSelectedDates] = useState<{
     startDate: dayjs.Dayjs | null;
     endDate: dayjs.Dayjs | null;
@@ -182,7 +203,20 @@ function Dashboard({ data }: Props) {
 
       <div className="container">
         <div className="form-container">
-          <h5>{"Activities Overview"}</h5>
+          <div className="row">
+            <div className="col-3">
+              <h5>{"Activities Overview"}</h5>
+            </div>
+            <div className="col-5" style={{ color: "lightgray" }}>
+              {selectedDates.startDate && selectedDates.endDate && (
+                <h5>
+                  {String(selectedDates.startDate.format("DD/MM/YYYY")) +
+                    " - " +
+                    String(selectedDates.endDate.format("DD/MM/YYYY"))}
+                </h5>
+              )}
+            </div>
+          </div>
 
           <PlotModule data={aggregatedData} />
           <div className="radio-group-container text-center">

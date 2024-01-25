@@ -18,6 +18,7 @@
     "bootstrap": "^5.3.2",
     "chart.js": "^4.4.1",
     "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^3.3.1",
     "dayjs": "^1.11.10",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.21",
