@@ -182,6 +182,8 @@ function Dashboard({ data }: Props) {
 
       <div className="container">
         <div className="form-container">
+          <h5>{"Activities Overview"}</h5>
+
           <PlotModule data={aggregatedData} />
           <div className="radio-group-container text-center">
             <RadioGroup
