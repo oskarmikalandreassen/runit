@@ -8,6 +8,7 @@ import RadioGroup from "./RadioGroup";
 import StatsOverview from "./StatsOverview";
 import DateSelector from "./DateSelector";
 import PieChart from "./PieActiveChart";
+import { ChartProvider } from "./ChartContext";
 
 import {
   filterDataByDateAndType,
@@ -223,14 +224,16 @@ function Dashboard({ data }: Props) {
 
       <div className="container">
         <div className="form-container">
-          <div className="row">
-            <div className="col">
-              <PieChart title="Week Breakdown" filteredData={filteredData} />
+          <ChartProvider>
+            <div className="row">
+              <div>
+                <PieChart
+                  title="Week and Month Breakdown"
+                  filteredData={filteredData}
+                />
+              </div>
             </div>
-            <div className="col">
-              <MonthOverview data={filteredData} />
-            </div>
-          </div>
+          </ChartProvider>
         </div>
       </div>
     </LocalizationProvider>

@@ -1,47 +1,70 @@
-import * as React from "react";
+// MonthOverview.tsx
+import React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { ActivityData } from "./types";
+import { aggregateDataByMetric } from "../utils/helpers";
+import { useChartContext } from "./ChartContext";
 
 interface Props {
   data: ActivityData[];
 }
 
 export default function MonthOverview({ data }: Props) {
-  // Helper function to extract the month from the DateTime column
-  const extractMonth = (dateTime: string) => {
-    const dateParts = dateTime.split("-");
-    return dateParts[1]; // Month is the second part in "YYYY-MM-DD"
-  };
+  const monthAbbreviations = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
 
-  // Helper function to calculate the number of activities per month
-  const calculateActivitiesPerMonth = () => {
-    const monthAbbreviations = [
-      "JAN",
-      "FEB",
-      "MAR",
-      "APR",
-      "MAY",
-      "JUN",
-      "JUL",
-      "AUG",
-      "SEP",
-      "OCT",
-      "NOV",
-      "DEC",
-    ];
-    const activitiesPerMonth = data.reduce((acc: any, activity) => {
-      const monthIndex = parseInt(extractMonth(activity.DateTime), 10) - 1; // Adjust to 0-based index
-      const monthAbbreviation = monthAbbreviations[monthIndex];
-      acc[monthAbbreviation] = (acc[monthAbbreviation] || 0) + 1;
-      return acc;
-    }, {});
-    return monthAbbreviations.map((monthAbbreviation) => ({
-      month: monthAbbreviation,
-      count: activitiesPerMonth[monthAbbreviation] || 0,
-    }));
-  };
+  const { weekPieType, setWeekPieType, displayMode, setDisplayMode } =
+    useChartContext();
 
-  const activitiesPerMonthData = calculateActivitiesPerMonth();
+  // Aggregate data by month, disregarding years
+  const aggregatedData = aggregateDataByMetric(data, weekPieType, "month");
+
+  // Sum up the values for each month
+  const activitiesPerMonthData = monthAbbreviations.map(
+    (monthAbbreviation, index) => {
+      const sum = Object.entries(aggregatedData)
+        .filter(
+          ([key]) =>
+            key.endsWith(`-${index + 1}`) || key.endsWith(`-0${index + 1}`)
+        )
+        .reduce((total, [, value]) => total + value, 0);
+
+      return {
+        month: monthAbbreviation,
+        count: sum || 0,
+      };
+    }
+  );
+
+  // Function to map weekPieType to label
+  const getLabelForWeekPieType = (type: string) => {
+    switch (type) {
+      case "Activities":
+        return "activities";
+      case "Distance":
+        return "km";
+      case "Time":
+        return "sec";
+      case "Elevation Gain":
+        return "m";
+      case "Calories":
+        return "kcal";
+      default:
+        return "";
+    }
+  };
 
   return (
     <BarChart
@@ -50,12 +73,13 @@ export default function MonthOverview({ data }: Props) {
       series={[
         {
           dataKey: "count",
-          valueFormatter: (value) => `${value} activities`,
+          valueFormatter: (value) =>
+            `${Math.round(value)} ${getLabelForWeekPieType(weekPieType)}`,
         },
       ]}
       layout="horizontal"
       width={500}
-      height={400}
+      height={340}
     />
   );
 }

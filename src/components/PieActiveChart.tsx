@@ -6,6 +6,9 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FormControl } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
+import { aggregateDataByMetric } from "../utils/helpers";
+import { useChartContext } from "./ChartContext";
+import MonthOverview from "./MonthOverview";
 
 interface Props {
   title: string;
@@ -13,13 +16,8 @@ interface Props {
 }
 
 function PieActiveChart({ title, filteredData }: Props) {
-  const [weekPieType, setWeekPieType] = useState<
-    "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities"
-  >("Distance");
-
-  const [displayMode, setDisplayMode] = useState<"Absolute" | "Percentage">(
-    "Absolute"
-  );
+  const { weekPieType, setWeekPieType, displayMode, setDisplayMode } =
+    useChartContext();
 
   const handleWeekPieTypeChange = (
     event: React.ChangeEvent<{
@@ -44,38 +42,11 @@ function PieActiveChart({ title, filteredData }: Props) {
     setDisplayMode(event.target.value as "Absolute" | "Percentage");
   };
 
-  // Aggregate data based on the selected metric
-  const aggregatedData: Record<string, number> = {};
-
-  filteredData.forEach((activity) => {
-    const dateTime = dayjs(activity.DateTime);
-    const dayOfWeek = dateTime.format("dddd");
-
-    if (aggregatedData[dayOfWeek] === undefined) {
-      aggregatedData[dayOfWeek] = 0;
-    }
-
-    // Adjust the aggregation based on the selected metric
-    switch (weekPieType) {
-      case "Distance":
-        aggregatedData[dayOfWeek] += activity.Distance;
-        break;
-      case "Time":
-        aggregatedData[dayOfWeek] += activity["Moving Time"];
-        break;
-      case "Calories":
-        aggregatedData[dayOfWeek] += activity.Calories;
-        break;
-      case "Elevation Gain":
-        aggregatedData[dayOfWeek] += activity["Elevation Gain"];
-        break;
-      case "Activities":
-        aggregatedData[dayOfWeek] += 1; // Counting the number of activities
-        break;
-      default:
-        break;
-    }
-  });
+  const aggregatedData = aggregateDataByMetric(
+    filteredData,
+    weekPieType,
+    "weekday"
+  );
 
   const orderedDaysOfWeek = [
     "Monday",
@@ -96,7 +67,7 @@ function PieActiveChart({ title, filteredData }: Props) {
               Object.values(aggregatedData).reduce((sum, v) => sum + v, 0)) *
               100
           )
-        : aggregatedData[dayOfWeek].toFixed(2),
+        : Number(aggregatedData[dayOfWeek].toFixed(0)),
     label: dayOfWeek,
   }));
 
@@ -141,7 +112,7 @@ function PieActiveChart({ title, filteredData }: Props) {
         </div>
       </div>
       <div className="row">
-        <div className="col">
+        <div className="col-5">
           <div className="pie-chart">
             <PieChart
               series={[
@@ -149,7 +120,7 @@ function PieActiveChart({ title, filteredData }: Props) {
                   data,
                   highlightScope: { faded: "global", highlighted: "item" },
                   cornerRadius: 5,
-                  cx: 150,
+                  cx: 200,
 
                   faded: {
                     innerRadius: 30,
@@ -159,8 +130,12 @@ function PieActiveChart({ title, filteredData }: Props) {
                 },
               ]}
               height={300}
+              slotProps={{ legend: { hidden: true } }}
             />
           </div>
+        </div>
+        <div className="col">
+          <MonthOverview data={filteredData}></MonthOverview>
         </div>
       </div>
     </div>

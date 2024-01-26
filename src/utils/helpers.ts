@@ -210,6 +210,47 @@ function formatTime(seconds: number): string {
 }
 
 
+export const aggregateDataByMetric = (
+  data: ActivityData[],
+  metric: "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities",
+  aggregationLevel: "weekday" | "month"
+): Record<string, number> => {
+  const aggregatedData: Record<string, number> = {};
+
+  data.forEach((activity) => {
+    const dateTime = dayjs(activity.DateTime);
+    const key = aggregationLevel === "weekday" ? dateTime.format("dddd") : dateTime.format("YYYY-MM");
+
+    if (aggregatedData[key] === undefined) {
+      aggregatedData[key] = 0;
+    }
+
+    switch (metric) {
+      case "Distance":
+        aggregatedData[key] += activity.Distance;
+        break;
+      case "Time":
+        aggregatedData[key] += activity["Moving Time"];
+        break;
+      case "Calories":
+        aggregatedData[key] += activity.Calories;
+        break;
+      case "Elevation Gain":
+        aggregatedData[key] += activity["Elevation Gain"];
+        break;
+      case "Activities":
+        aggregatedData[key] += 1;
+        break;
+      default:
+        break;
+    }
+  });
+
+  return aggregatedData;
+};
+
+
+
 
 
 
