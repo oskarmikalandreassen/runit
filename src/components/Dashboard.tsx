@@ -7,7 +7,6 @@ import PlotModule from "./PlotModule";
 import RadioGroup from "./RadioGroup";
 import StatsOverview from "./StatsOverview";
 import DateSelector from "./DateSelector";
-import PieChart from "./PieActiveChart";
 import { ChartProvider } from "./ChartContext";
 
 import {
@@ -21,7 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { FormControl } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
-import MonthOverview from "./MonthOverview";
+import WeekMonthTab from "./WeekMonthTab";
 
 interface Props {
   data: ActivityData[];
@@ -199,9 +198,9 @@ function Dashboard({ data }: Props) {
         </div>
       </div>
       <div className="container">
-        <div className="form-container">
-          <div className="row">
-            <div className="col">
+        <div className="row">
+          <div className="col">
+            <div className="half-form-container">
               <StatsOverview
                 overviewTitle={
                   (timePeriod === "Day" ? "Daily" : timePeriod + "ly") +
@@ -211,7 +210,9 @@ function Dashboard({ data }: Props) {
                 statsDict={overallPerformance}
               />
             </div>
-            <div className="col">
+          </div>
+          <div className="col">
+            <div className="half-form-container">
               <StatsOverview
                 overviewTitle={"Estimated Best Efforts"}
                 selectedDates={selectedDates}
@@ -227,7 +228,7 @@ function Dashboard({ data }: Props) {
           <ChartProvider>
             <div className="row">
               <div>
-                <PieChart
+                <WeekMonthTab
                   title="Week and Month Breakdown"
                   filteredData={filteredData}
                 />

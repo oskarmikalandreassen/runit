@@ -249,6 +249,29 @@ export const aggregateDataByMetric = (
   return aggregatedData;
 };
 
+// Function to map weekPieType to label
+export const getLabelForMetricType = (type: string) => {
+  switch (type) {
+    case "Activities":
+      return "activities";
+    case "Distance":
+      return "km";
+    case "Time":
+      return "sec";
+    case "Elevation Gain":
+      return "m";
+    case "Calories":
+      return "kcal";
+    case "Max Heart Rate":
+      return "bpm";
+    case "Average Cadence":
+      return "spm";
+    case "Average Speed":
+      return "min/km";
+    default:
+      return "";
+  }
+};
 
 
 

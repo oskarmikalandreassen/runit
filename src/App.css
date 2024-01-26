@@ -16,6 +16,15 @@
     transition: box-shadow 0.08s ease-in-out, width 0.08s ease-in-out;
   }
 
+  .half-form-container {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 480px;
+    transition: box-shadow 0.08s ease-in-out, width 0.08s ease-in-out;
+  }
+
   .navbar-container {
     display: flex;
     justify-content: center;

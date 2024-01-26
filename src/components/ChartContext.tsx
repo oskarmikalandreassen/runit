@@ -8,15 +8,13 @@ interface ChartContextProps {
     | "Calories"
     | "Elevation Gain"
     | "Activities";
-  displayMode: "Absolute" | "Percentage";
+  displayMode: "Value" | "Percentage";
   setWeekPieType: React.Dispatch<
     React.SetStateAction<
       "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities"
     >
   >;
-  setDisplayMode: React.Dispatch<
-    React.SetStateAction<"Absolute" | "Percentage">
-  >;
+  setDisplayMode: React.Dispatch<React.SetStateAction<"Value" | "Percentage">>;
 }
 
 const ChartContext = createContext<ChartContextProps | undefined>(undefined);
@@ -27,8 +25,8 @@ export const ChartProvider: React.FC<{ children: React.ReactNode }> = ({
   const [weekPieType, setWeekPieType] = useState<
     "Distance" | "Time" | "Calories" | "Elevation Gain" | "Activities"
   >("Distance");
-  const [displayMode, setDisplayMode] = useState<"Absolute" | "Percentage">(
-    "Absolute"
+  const [displayMode, setDisplayMode] = useState<"Value" | "Percentage">(
+    "Value"
   );
 
   const contextValue = {

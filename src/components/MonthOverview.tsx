@@ -2,8 +2,9 @@
 import React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { ActivityData } from "./types";
-import { aggregateDataByMetric } from "../utils/helpers";
 import { useChartContext } from "./ChartContext";
+
+import { aggregateDataByMetric, getLabelForMetricType } from "../utils/helpers";
 
 interface Props {
   data: ActivityData[];
@@ -48,24 +49,6 @@ export default function MonthOverview({ data }: Props) {
     }
   );
 
-  // Function to map weekPieType to label
-  const getLabelForWeekPieType = (type: string) => {
-    switch (type) {
-      case "Activities":
-        return "activities";
-      case "Distance":
-        return "km";
-      case "Time":
-        return "sec";
-      case "Elevation Gain":
-        return "m";
-      case "Calories":
-        return "kcal";
-      default:
-        return "";
-    }
-  };
-
   return (
     <BarChart
       dataset={activitiesPerMonthData}
@@ -74,12 +57,21 @@ export default function MonthOverview({ data }: Props) {
         {
           dataKey: "count",
           valueFormatter: (value) =>
-            `${Math.round(value)} ${getLabelForWeekPieType(weekPieType)}`,
+            displayMode === "Value"
+              ? `${(
+                  (value /
+                    activitiesPerMonthData.reduce(
+                      (acc, cur) => acc + cur.count,
+                      0
+                    )) *
+                  100
+                ).toFixed(0)}%`
+              : `${Math.round(value)} ${getLabelForMetricType(weekPieType)}`,
         },
       ]}
       layout="horizontal"
       width={500}
-      height={340}
+      height={350}
     />
   );
 }

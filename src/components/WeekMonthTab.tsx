@@ -6,16 +6,17 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FormControl } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
-import { aggregateDataByMetric } from "../utils/helpers";
 import { useChartContext } from "./ChartContext";
 import MonthOverview from "./MonthOverview";
+
+import { aggregateDataByMetric, getLabelForMetricType } from "../utils/helpers";
 
 interface Props {
   title: string;
   filteredData: ActivityData[];
 }
 
-function PieActiveChart({ title, filteredData }: Props) {
+function WeekMonthTab({ title, filteredData }: Props) {
   const { weekPieType, setWeekPieType, displayMode, setDisplayMode } =
     useChartContext();
 
@@ -36,10 +37,10 @@ function PieActiveChart({ title, filteredData }: Props) {
 
   const handleDisplayModeChange = (
     event: React.ChangeEvent<{
-      value: "Absolute" | "Percentage";
+      value: "Value" | "Percentage";
     }>
   ) => {
-    setDisplayMode(event.target.value as "Absolute" | "Percentage");
+    setDisplayMode(event.target.value as "Value" | "Percentage");
   };
 
   const aggregatedData = aggregateDataByMetric(
@@ -58,28 +59,40 @@ function PieActiveChart({ title, filteredData }: Props) {
     "Sunday",
   ];
 
-  const data = orderedDaysOfWeek.map((dayOfWeek, id) => ({
-    id,
-    value:
+  const data = orderedDaysOfWeek.map((dayOfWeek, id) => {
+    const rawValue = aggregatedData[dayOfWeek];
+    const value =
       displayMode === "Percentage"
-        ? Math.round(
-            (aggregatedData[dayOfWeek] /
-              Object.values(aggregatedData).reduce((sum, v) => sum + v, 0)) *
-              100
-          )
-        : Number(aggregatedData[dayOfWeek].toFixed(0)),
-    label: dayOfWeek,
-  }));
+        ? rawValue
+          ? Math.round(
+              (rawValue /
+                Object.values(aggregatedData).reduce((sum, v) => sum + v, 0)) *
+                100
+            )
+          : 0
+        : rawValue
+        ? Number(rawValue.toFixed(0))
+        : 0;
+
+    const label = dayOfWeek;
+
+    return {
+      id,
+      value,
+      label,
+    };
+  });
 
   return (
     <div>
       <div className="row" style={{ marginBottom: "20px" }}>
-        <div className="col">
+        <div className="col-9">
           <h5>{title}</h5>
+          <h6>
+            Break Down Activities Across Various Days of the Week and Months
+          </h6>
         </div>
-      </div>
-      <div className="row">
-        <div className="col-12" style={{ display: "flex", gap: "10px" }}>
+        <div className="col" style={{ display: "flex", gap: "10px" }}>
           <FormControl>
             <InputLabel id="pieChartType">Metric</InputLabel>
 
@@ -105,7 +118,7 @@ function PieActiveChart({ title, filteredData }: Props) {
               label="Unit"
               onChange={handleDisplayModeChange}
             >
-              <MenuItem value="Absolute">Absolute</MenuItem>
+              <MenuItem value="Value">Value</MenuItem>
               <MenuItem value="Percentage">Percentage</MenuItem>
             </Select>
           </FormControl>
@@ -127,10 +140,22 @@ function PieActiveChart({ title, filteredData }: Props) {
                     additionalRadius: -10,
                     color: "gray",
                   },
+                  valueFormatter: (value) =>
+                    displayMode === "Percentage"
+                      ? `${(
+                          (value.data /
+                            data.reduce((acc, cur) => acc + cur.value, 0)) *
+                          100
+                        ).toFixed(0)}%`
+                      : `${Math.round(value.data)} ${getLabelForMetricType(
+                          weekPieType
+                        )}`,
                 },
               ]}
               height={300}
-              slotProps={{ legend: { hidden: true } }}
+              slotProps={{
+                legend: { hidden: true },
+              }}
             />
           </div>
         </div>
@@ -142,4 +167,4 @@ function PieActiveChart({ title, filteredData }: Props) {
   );
 }
 
-export default PieActiveChart;
+export default WeekMonthTab;
