@@ -20,6 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { FormControl } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
+import MonthOverview from "./MonthOverview";
 
 interface Props {
   data: ActivityData[];
@@ -226,7 +227,9 @@ function Dashboard({ data }: Props) {
             <div className="col">
               <PieChart title="Week Breakdown" filteredData={filteredData} />
             </div>
-            <div className="col"></div>
+            <div className="col">
+              <MonthOverview data={filteredData} />
+            </div>
           </div>
         </div>
       </div>
