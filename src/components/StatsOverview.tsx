@@ -1,14 +1,30 @@
+import dayjs from "dayjs";
 import { ReactNode } from "react";
+
+type SelectedDatesType = {
+  startDate: dayjs.Dayjs | null;
+  endDate: dayjs.Dayjs | null;
+};
 
 interface Props {
   overviewTitle: string;
+  selectedDates: SelectedDatesType;
   statsDict: { [key: string]: ReactNode }; // Define the type for statsDict
 }
 
-const StatsOverview = ({ overviewTitle, statsDict }: Props) => {
+const StatsOverview = ({ overviewTitle, selectedDates, statsDict }: Props) => {
   return (
     <div>
-      <h5>{overviewTitle}</h5>
+      <div className="col-12" style={{ display: "flex", gap: "10px" }}>
+        <h5>{overviewTitle}</h5>
+        {selectedDates.startDate && selectedDates.endDate && (
+          <h5 style={{ color: "lightgray" }}>
+            {selectedDates.startDate.format("DD/MM/YYYY") +
+              " - " +
+              selectedDates.endDate.format("DD/MM/YYYY")}
+          </h5>
+        )}
+      </div>{" "}
       <div
         className="row"
         style={{ marginTop: "20px", paddingLeft: "10px", paddingRight: "10px" }}

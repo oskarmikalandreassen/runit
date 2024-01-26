@@ -18,6 +18,8 @@ import {
 import { ActivityData } from "./types";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { FormControl } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
 
 interface Props {
   data: ActivityData[];
@@ -139,23 +141,31 @@ function Dashboard({ data }: Props) {
             <div className="col-5"></div>
 
             <div className="col" style={{ display: "flex", gap: "10px" }}>
-              <Select
-                value={activityType}
-                onChange={handleActivityTypeChange}
-                label="Activity Type"
-              >
-                <MenuItem value="Run">Run</MenuItem>
-                <MenuItem value="Swim">Swim</MenuItem>
-              </Select>
-              <Select
-                value={timePeriod}
-                onChange={handleTimePeriodChange}
-                label="Time Period"
-              >
-                <MenuItem value="Day">Day</MenuItem>
-                <MenuItem value="Week">Week</MenuItem>
-                <MenuItem value="Month">Month</MenuItem>
-              </Select>
+              <FormControl>
+                <InputLabel id="activityType">Activity</InputLabel>
+                <Select
+                  id="activityType"
+                  value={activityType}
+                  onChange={handleActivityTypeChange}
+                  label="Activity"
+                >
+                  <MenuItem value="Run">Run</MenuItem>
+                  <MenuItem value="Swim">Swim</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel id="timePeriod">Period</InputLabel>
+                <Select
+                  id="timePeriod"
+                  value={timePeriod}
+                  onChange={handleTimePeriodChange}
+                  label="Period"
+                >
+                  <MenuItem value="Day">Day</MenuItem>
+                  <MenuItem value="Week">Week</MenuItem>
+                  <MenuItem value="Month">Month</MenuItem>
+                </Select>
+              </FormControl>
             </div>
           </div>
         </div>
@@ -195,12 +205,14 @@ function Dashboard({ data }: Props) {
                   (timePeriod === "Day" ? "Daily" : timePeriod + "ly") +
                   " Performance"
                 }
+                selectedDates={selectedDates}
                 statsDict={overallPerformance}
               />
             </div>
             <div className="col">
               <StatsOverview
                 overviewTitle={"Estimated Best Efforts"}
+                selectedDates={selectedDates}
                 statsDict={distanceMetrics}
               />
             </div>

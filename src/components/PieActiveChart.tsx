@@ -4,6 +4,8 @@ import { ActivityData } from "./types";
 import { PieChart } from "@mui/x-charts/PieChart";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { FormControl } from "@mui/material";
+import InputLabel from "@mui/material/InputLabel";
 
 interface Props {
   title: string;
@@ -106,26 +108,36 @@ function PieActiveChart({ title, filteredData }: Props) {
         </div>
       </div>
       <div className="row">
-        <div className="col-3" style={{ display: "flex", gap: "10px" }}>
-          <Select
-            value={weekPieType}
-            onChange={handleWeekPieTypeChange}
-            label="Metric"
-          >
-            <MenuItem value="Distance">Distance</MenuItem>
-            <MenuItem value="Time">Time</MenuItem>
-            <MenuItem value="Calories">Calories</MenuItem>
-            <MenuItem value="Elevation Gain">Elevation Gain</MenuItem>
-            <MenuItem value="Activities">Activities</MenuItem>
-          </Select>
-          <Select
-            value={displayMode}
-            label="Display Mode"
-            onChange={handleDisplayModeChange}
-          >
-            <MenuItem value="Absolute">Absolute</MenuItem>
-            <MenuItem value="Percentage">Percentage</MenuItem>
-          </Select>
+        <div className="col-12" style={{ display: "flex", gap: "10px" }}>
+          <FormControl>
+            <InputLabel id="pieChartType">Metric</InputLabel>
+
+            <Select
+              id="pieChartType"
+              value={weekPieType}
+              onChange={handleWeekPieTypeChange}
+              label="Metric"
+            >
+              <MenuItem value="Distance">Distance</MenuItem>
+              <MenuItem value="Time">Time</MenuItem>
+              <MenuItem value="Calories">Calories</MenuItem>
+              <MenuItem value="Elevation Gain">Elevation Gain</MenuItem>
+              <MenuItem value="Activities">Activities</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel id="pieChartUnit">Unit</InputLabel>
+
+            <Select
+              id="pieChartUnit"
+              value={displayMode}
+              label="Unit"
+              onChange={handleDisplayModeChange}
+            >
+              <MenuItem value="Absolute">Absolute</MenuItem>
+              <MenuItem value="Percentage">Percentage</MenuItem>
+            </Select>
+          </FormControl>
         </div>
       </div>
       <div className="row">

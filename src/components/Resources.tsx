@@ -1,15 +1,13 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import PaceChart from "./PaceChart";
+import VDOTCalculator from "./VDOTCalculator";
 
 function Resources() {
   return (
     <>
-      <div className="container">
-        <div className="form-container">
-          <PaceChart />
-        </div>
-      </div>
+      <PaceChart />
+      <VDOTCalculator />
     </>
   );
 }

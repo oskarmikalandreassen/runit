@@ -30,6 +30,7 @@ function DateSelector({ selectedDate, onDateChange, label }: Props) {
       label={label}
       value={date ? date.toDate() : null}
       onChange={handleDateChange}
+      format="DD/MM/YYYY"
     />
   );
 }
