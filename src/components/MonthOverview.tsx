@@ -57,7 +57,7 @@ export default function MonthOverview({ data }: Props) {
         {
           dataKey: "count",
           valueFormatter: (value) =>
-            displayMode === "Value"
+            displayMode === "Percentage"
               ? `${(
                   (value /
                     activitiesPerMonthData.reduce(

@@ -86,7 +86,7 @@ function WeekMonthTab({ title, filteredData }: Props) {
   return (
     <div>
       <div className="row" style={{ marginBottom: "20px" }}>
-        <div className="col-9">
+        <div className="col-8">
           <h5>{title}</h5>
           <h6>
             Break Down Activities Across Various Days of the Week and Months
